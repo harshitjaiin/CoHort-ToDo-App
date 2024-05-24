@@ -4,6 +4,7 @@ const app = new express()
 const {Todo} = require("../db")
 app.use(express.json())
 
+const port = 3000;
 //what do i need in the body of a req isko validate kr skte h using zod!
 app.post("/todo" , async function (req , res){
     const payload = req.body;
@@ -59,3 +60,5 @@ app.put("/completed" , function(req , res){
         msg : "Successfully Updated!"
     })
 })
+
+app.listen(port);
