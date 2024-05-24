@@ -1,14 +1,14 @@
 const express = require("express");
 const { createTodo, updateTodo } = require("./types");
 const app = new express()
-const {Todo} = require("../db")
+const {todo} = require("./db")
 app.use(express.json())
 
 const port = 3000;
 //what do i need in the body of a req isko validate kr skte h using zod!
 app.post("/todo" , async function (req , res){
     const payload = req.body;
-    const parsedPayload =   createTodo.safeParse(payload);
+    const parsedPayload =  createTodo.safeParse(payload);
     if(!parsedPayload.success){
         res.status(411).json({
             msg: "You have sent the wrong input format"
@@ -16,29 +16,34 @@ app.post("/todo" , async function (req , res){
         return ;
     }
     // put in mongoDb
-    await Todo.create({
+    await todo.create({
         title : payload.title,
         desc: payload.desc,
         completed : false
     })
 
     res.json({
-        msg: "Todo Created"
+        msg: "todo Created"
     })
 })
 
-app.get("/todos" , async function(req , res){
+app.get("/todos", async function(req, res) {
+    try {
+        // Get all todos
+        const todos = await todo.find();
+        console.log(todos);
+        // Send response with 200 status code and todos in JSON format
+        res.status(200).json({ todos });
+    } catch (error) {
+        console.error("Error fetching todos:", error);
+        // Send response with 500 status code and error message
+        res.status(500).json({ message: "Failed to fetch todos" });
+    }
+});
 
-    //get all todos!
-    const todos = await Todo.find({})
-
-    res.json({
-        todos
-    })
-})
 
 //marking a todo as completed!
-app.put("/completed" , function(req , res){
+app.put("/completed" , async function(req , res){
     const payload = req.body;
     const parsedPayload = updateTodo.safeParse(payload);
 
@@ -50,8 +55,8 @@ app.put("/completed" , function(req , res){
     }
 
 
-    await Todo.updateOne({
-        _id  = payload.id
+    await todo.updateOne({
+        _id: payload.id
     }, {
         completed : true
     })
