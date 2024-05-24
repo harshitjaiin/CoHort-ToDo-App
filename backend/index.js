@@ -8,7 +8,7 @@ const port = 3000;
 //what do i need in the body of a req isko validate kr skte h using zod!
 app.post("/todo" , async function (req , res){
     const payload = req.body;
-    const parsedPayload =   createTodo.safeParse(oayload);
+    const parsedPayload =   createTodo.safeParse(payload);
     if(!parsedPayload.success){
         res.status(411).json({
             msg: "You have sent the wrong input format"
@@ -17,7 +17,7 @@ app.post("/todo" , async function (req , res){
     }
     // put in mongoDb
     await Todo.create({
-        title : payload.title;
+        title : payload.title,
         desc: payload.desc,
         completed : false
     })
