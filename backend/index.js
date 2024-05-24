@@ -2,7 +2,9 @@ const express = require("express");
 const { createTodo, updateTodo } = require("./types");
 const app = new express()
 const {todo} = require("./db")
+const cors = require("cors")
 app.use(express.json())
+app.use(cors())
 
 const port = 3000;
 //what do i need in the body of a req isko validate kr skte h using zod!
@@ -31,7 +33,6 @@ app.get("/todos", async function(req, res) {
     try {
         // Get all todos
         const todos = await todo.find();
-        console.log(todos);
         // Send response with 200 status code and todos in JSON format
         res.status(200).json({ todos });
     } catch (error) {

@@ -26,15 +26,15 @@ export function CreateTodo(){
             padding:10,
             margin:10
         }} onClick={()=>{
-            fetch("http://localhost:3000/todos" , {
+            fetch("http://localhost:3000/todo" , {
                 method:"POST",
                 body:JSON.stringify({
                     title:title,
                     desc:desc  
                 }),
                 headers:{
-                    "contentType": "application/json"
-                }
+                    "Content-type": "application/json"
+                } 
             })
             .then(async function(res){
                 const json = await res.json();
